@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://chatterwebsapp.heroku.com";
+const baseURL = "https://chatterwebsapp.herokuapp.com/";
 let headers = {};
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 if (localStorage.getItem("loggedUser")) {

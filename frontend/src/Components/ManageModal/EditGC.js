@@ -30,17 +30,18 @@ const Header = styled.h1`
 `;
 const ChatsBlock = styled.div`
   max-height: 80%;
-  width: 100%;
-  margin-top: 25px;
+  width: 90%;
+  margin: 25px 5%;
   overflow-y: auto;
   padding: 25px 50px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
   grid-gap: 50px;
+  justify-items: center;
 `;
 const EditGCTab = styled.div`
   height: 90px;
-  width: ${(props) => (props.isEdit ? "80%" : "100%")};
+  width: 450px;
   background: #9b84ee;
   border-radius: 10px;
   display: flex;
@@ -162,8 +163,14 @@ const Button = styled.div`
     color: black;
   }
 `;
+const BackButton = styled(Button)`
+  position: absolute;
+  top: 0;
+  left: 25px;
+`;
+
 const LoadingWrapper = styled.div`
-  height: 100%;
+  height: 80%;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -181,7 +188,8 @@ const NotFoundImage = styled.div`
   background-repeat: no-repeat;
   margin-bottom: 50px;
 `;
-const EditGC = () => {
+
+const EditGC = ({ setShowChoice, setShowCreate }) => {
   const dispatch = useDispatch();
   const [showEditTab, setShowEditTab] = useState(false);
   const [usersArray, setUsersArray] = useState([]);
@@ -192,6 +200,9 @@ const EditGC = () => {
   const [loading, setLoading] = useState(false);
   const { loading: groupchatsLoading, chats: groupchats } = useSelector(
     (state) => state.groupchats
+  );
+  const { loading: currChatLoading } = useSelector(
+    (state) => state.currentChat
   );
   const { users } = useSelector((state) => state.allUsers);
   const openeditHandler = (chat) => {
@@ -273,6 +284,14 @@ const EditGC = () => {
             exit={{ opacity: 0 }}
           >
             <Header>Manage Groups ... </Header>
+            <BackButton
+              onClick={() => {
+                setShowChoice(true);
+                setShowCreate(false);
+              }}
+            >
+              <p>Back</p>
+            </BackButton>
             <>
               {groupchatsLoading ? (
                 <LoadingWrapper>
@@ -319,83 +338,92 @@ const EditGC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <EditBlock>
-              <EditLeftBlock>
-                <InputWrapper>
-                  <InputBox
-                    state={gcname}
-                    changeHandler={setGcname}
-                    placeholder="Name of the group ... "
-                  />
-                </InputWrapper>
-                <UsersWrapper>
-                  {usersArray.map((item, index) => {
-                    return (
-                      <EditGCTab key={index} isEdit={true}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <Avatar image={item.image} />
-                          <Text>{item.name}</Text>
-                        </div>
-                        <TabButtons>
-                          <MdDeleteOutline
-                            size={24}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => removeUserHandler(item._id)}
-                          />
-                        </TabButtons>
-                      </EditGCTab>
-                    );
-                  })}
-                </UsersWrapper>
-              </EditLeftBlock>
-              <EditRightBlock>
-                <h1>Search For Friend</h1>
-                <UserSearchWrapper>
-                  <InputBox
-                    placeholder="Enter Friend's Name"
-                    state={search}
-                    type="text"
-                    changeHandler={setSearch}
-                  />
-                  <SearchButton onClick={() => searchUser()}>
-                    <AiOutlineSearch size={28} />
-                  </SearchButton>
-                </UserSearchWrapper>
-                {loading ? (
-                  <LoaderWrapper>
-                    <Loader height="150px" width="150px" />
-                  </LoaderWrapper>
-                ) : (
-                  <SearchResult>
-                    {Object.keys(result).length === 0 ? (
-                      <></>
-                    ) : result.name === "User not found" ? (
-                      <h1>{result.name}</h1>
-                    ) : result.name === "Search User First ! " ? (
-                      <h1>{result.name}</h1>
-                    ) : result.name === "User Already Added" ? (
-                      <h1>{result.name}</h1>
-                    ) : (
-                      <ContactCard>
-                        <ContactImage image={result.image} />
-                        <h2>{result.name}</h2>
-                      </ContactCard>
-                    )}
-                  </SearchResult>
-                )}
-                <Button onClick={() => addUserHandler()}>
-                  <p>Add User</p>
-                </Button>
-                <ButtonsWrapper>
-                  <Button onClick={() => updateGroupChatHandler()}>
-                    <p>Save Changes</p>
+            {currChatLoading ? (
+              <LoadingWrapper>
+                {" "}
+                <Loader height="300px" width="300px"></Loader>{" "}
+              </LoadingWrapper>
+            ) : (
+              <EditBlock>
+                <EditLeftBlock>
+                  <InputWrapper>
+                    <InputBox
+                      state={gcname}
+                      changeHandler={setGcname}
+                      placeholder="Name of the group ... "
+                    />
+                  </InputWrapper>
+                  <UsersWrapper>
+                    {usersArray.map((item, index) => {
+                      return (
+                        <EditGCTab key={index} isEdit={true}>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <Avatar image={item.image} />
+                            <Text>{item.name}</Text>
+                          </div>
+                          <TabButtons>
+                            <MdDeleteOutline
+                              size={24}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => removeUserHandler(item._id)}
+                            />
+                          </TabButtons>
+                        </EditGCTab>
+                      );
+                    })}
+                  </UsersWrapper>
+                </EditLeftBlock>
+                <EditRightBlock>
+                  <h1>Search For Friend</h1>
+                  <UserSearchWrapper>
+                    <InputBox
+                      placeholder="Enter Friend's Name"
+                      state={search}
+                      type="text"
+                      changeHandler={setSearch}
+                    />
+                    <SearchButton onClick={() => searchUser()}>
+                      <AiOutlineSearch size={28} />
+                    </SearchButton>
+                  </UserSearchWrapper>
+                  {loading ? (
+                    <LoaderWrapper>
+                      <Loader height="150px" width="150px" />
+                    </LoaderWrapper>
+                  ) : (
+                    <SearchResult>
+                      {Object.keys(result).length === 0 ? (
+                        <></>
+                      ) : result.name === "User not found" ? (
+                        <h1>{result.name}</h1>
+                      ) : result.name === "Search User First ! " ? (
+                        <h1>{result.name}</h1>
+                      ) : result.name === "User Already Added" ? (
+                        <h1>{result.name}</h1>
+                      ) : (
+                        <ContactCard>
+                          <ContactImage image={result.image} />
+                          <h2>{result.name}</h2>
+                        </ContactCard>
+                      )}
+                    </SearchResult>
+                  )}
+                  <Button onClick={() => addUserHandler()}>
+                    <p>Add User</p>
                   </Button>
-                  <Button onClick={() => setShowEditTab(false)}>
-                    <p>Cancel</p>
-                  </Button>
-                </ButtonsWrapper>
-              </EditRightBlock>
-            </EditBlock>
+                  <ButtonsWrapper>
+                    <Button onClick={() => updateGroupChatHandler()}>
+                      <p>Save Changes</p>
+                    </Button>
+                    <Button onClick={() => setShowEditTab(false)}>
+                      <p>Cancel</p>
+                    </Button>
+                  </ButtonsWrapper>
+                </EditRightBlock>
+              </EditBlock>
+            )}
           </Motion>
         )}
       </AnimatePresence>

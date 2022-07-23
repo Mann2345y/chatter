@@ -88,6 +88,13 @@ const NoChatWrapper = styled.div`
   align-items: center;
   padding: 0 20px;
 `;
+const LoadingWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const CreateGC = ({ friendsArray, setShowChoice, setShowCreate }) => {
   const dispatch = useDispatch();
@@ -118,63 +125,69 @@ const CreateGC = ({ friendsArray, setShowChoice, setShowCreate }) => {
   return (
     <Wrapper>
       <Header>Create New Group Chat...</Header>
-      <BlocksWrapper>
-        <LeftBlock>
-          <InputWrapper>
-            <InputBox
-              placeholder="Name for New Group..."
-              value={gcname}
-              changeHandler={setGcname}
-            />
-          </InputWrapper>
-          <h2 style={{ marginTop: "50px" }}>Select Users</h2>
-          <>
-            {currChatLoading || userChatsLoading ? (
-              <BigLoader>
-                <Loader />
-              </BigLoader>
-            ) : friendsArray.length > 0 ? (
-              <>
-                <SelectUsersWrapper>
-                  {friendsArray.map((item, index) => {
-                    return (
-                      <GCTab
-                        user={item}
-                        key={index}
-                        trashShow={true}
-                        addSelectedUsers={addSelectedUsers}
-                        removeSelectedUsers={removeSelectedUsers}
-                      />
-                    );
-                  })}
-                </SelectUsersWrapper>
-              </>
-            ) : (
-              <NoChatWrapper>
-                <FaRegFrown
-                  color="#d3d3d3"
-                  size={49}
-                  style={{ marginBottom: "25px" }}
-                ></FaRegFrown>
-                <h3>No Friends Added</h3>
-              </NoChatWrapper>
-            )}
-          </>
-        </LeftBlock>
-        <RightBlock>
-          <RightButtons onClick={createChatHandler}>
-            <p>Create</p>
-          </RightButtons>
-          <RightButtons
-            onClick={() => {
-              setShowChoice(true);
-              setShowCreate(false);
-            }}
-          >
-            <p>Cancel</p>
-          </RightButtons>
-        </RightBlock>
-      </BlocksWrapper>
+      {userChatsLoading ? (
+        <LoadingWrapper>
+          <Loader height="300px" width="300px"></Loader>{" "}
+        </LoadingWrapper>
+      ) : (
+        <BlocksWrapper>
+          <LeftBlock>
+            <InputWrapper>
+              <InputBox
+                placeholder="Name for New Group..."
+                value={gcname}
+                changeHandler={setGcname}
+              />
+            </InputWrapper>
+            <h2 style={{ marginTop: "50px" }}>Select Users</h2>
+            <>
+              {currChatLoading || userChatsLoading ? (
+                <BigLoader>
+                  <Loader />
+                </BigLoader>
+              ) : friendsArray.length > 0 ? (
+                <>
+                  <SelectUsersWrapper>
+                    {friendsArray.map((item, index) => {
+                      return (
+                        <GCTab
+                          user={item}
+                          key={index}
+                          trashShow={true}
+                          addSelectedUsers={addSelectedUsers}
+                          removeSelectedUsers={removeSelectedUsers}
+                        />
+                      );
+                    })}
+                  </SelectUsersWrapper>
+                </>
+              ) : (
+                <NoChatWrapper>
+                  <FaRegFrown
+                    color="#d3d3d3"
+                    size={49}
+                    style={{ marginBottom: "25px" }}
+                  ></FaRegFrown>
+                  <h3>No Friends Added</h3>
+                </NoChatWrapper>
+              )}
+            </>
+          </LeftBlock>
+          <RightBlock>
+            <RightButtons onClick={createChatHandler}>
+              <p>Create</p>
+            </RightButtons>
+            <RightButtons
+              onClick={() => {
+                setShowChoice(true);
+                setShowCreate(false);
+              }}
+            >
+              <p>Cancel</p>
+            </RightButtons>
+          </RightBlock>
+        </BlocksWrapper>
+      )}
     </Wrapper>
   );
 };

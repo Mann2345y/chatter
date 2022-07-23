@@ -236,6 +236,7 @@ export const updateGroupChat =
         type: UPDATE_GROUP_CHAT_SUCCESS,
         payload: updatedData,
       });
+      dispatch(getGroupchats());
     } catch (error) {
       dispatch({
         type: UPDATE_GROUP_CHAT_FAIL,

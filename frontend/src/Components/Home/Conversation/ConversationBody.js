@@ -6,8 +6,7 @@ import Message from "./Message";
 import { useState } from "react";
 import Loader from "../../../Reusables/Loader";
 import ScrollableFeed from "react-scrollable-feed";
-import { AiOutlineCloseSquare, AiOutlineMail } from "react-icons/ai";
-import { BiUser } from "react-icons/bi";
+import { AiOutlineCloseSquare } from "react-icons/ai";
 import { socket } from "../../../socket";
 import { setRecievedMessages } from "../../../Redux/actions/messagesActions";
 const Wrapper = styled.div`
@@ -24,7 +23,7 @@ const InnerWrapper = styled.div`
 `;
 const MessageBlock = styled.div`
   height: 100%;
-  width: ${(props) => (props.open ? "80%" : "100%")};
+  width: ${(props) => (props.open ? "calc(100% - 250px)" : "100%")};
   transition: all 0.2s ease-in;
   padding: 20px;
   padding-right: 0;
@@ -84,7 +83,6 @@ const ProfileImage = styled.div`
   border: 1px solid black;
   border-radius: 50%;
 `;
-const Buttons = styled.div``;
 
 const ConversationBody = ({ openprofile, setOpenprofile }) => {
   const dispatch = useDispatch();
@@ -104,13 +102,13 @@ const ConversationBody = ({ openprofile, setOpenprofile }) => {
     } else {
       setMessageState([...messageState]);
     }
-  }, [messages, loading]);
+  }, [messages, loading, messageState]);
   useEffect(() => {
     socket.on("message recieved", (messageRecieved) => {
       const message = JSON.parse(messageRecieved);
       dispatch(setRecievedMessages(message));
     });
-  }, []);
+  }, [dispatch]);
   return (
     <Wrapper image={bg}>
       <InnerWrapper>

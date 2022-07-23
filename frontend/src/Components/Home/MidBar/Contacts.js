@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { UserTab } from "../Tab";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFriendToCurrentChat } from "../../../Redux/actions/chatsActions";
+import Loader from "../../../Reusables/Loader";
 
 const TabsWrapper = styled.div`
   height: 100%;
@@ -39,17 +40,22 @@ const NotFoundImage = styled.div`
   background-repeat: no-repeat;
   margin-bottom: 50px;
 `;
-const Contacts = ({
-  friendsArray,
-  setManageFriends,
-  setOpenModal,
-  setManageGC,
-}) => {
+const LoadingWrapper = styled.div`
+  height: 85%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const Contacts = ({ setManageFriends, setOpenModal, setManageGC }) => {
   const dispatch = useDispatch();
   const setFriendChatHandler = (friendId) => {
     dispatch(setFriendToCurrentChat(friendId));
     console.log("first");
   };
+  const { loading, friends: friendsArray } = useSelector(
+    (state) => state.friends
+  );
 
   return (
     <>
@@ -63,7 +69,12 @@ const Contacts = ({
         <h4>Manage Friends</h4>
       </ManageFriendsButton>
       <TabsWrapper>
-        {friendsArray.length > 0 ? (
+        {loading ? (
+          <LoadingWrapper>
+            {" "}
+            <Loader height="250px" width="250px"></Loader>{" "}
+          </LoadingWrapper>
+        ) : friendsArray.length > 0 ? (
           friendsArray.map((item, index) => {
             return (
               <div key={index}>

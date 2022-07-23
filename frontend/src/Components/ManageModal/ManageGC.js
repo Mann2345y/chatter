@@ -91,7 +91,10 @@ const ManageGC = ({ friendsArray }) => {
                 setShowCreate={setShowCreate}
               ></CreateGC>
             ) : (
-              <EditGC></EditGC>
+              <EditGC
+                setShowChoice={setShowChoice}
+                setShowCreate={setShowCreate}
+              ></EditGC>
             )}
           </Motion>
         )}

@@ -76,8 +76,13 @@ const ChatTab = ({ user, clickHandler, trashShow, addShow }) => {
   );
 };
 const UserTab = ({ user, clickHandler, trashShow, addShow }) => {
+  const clickFunc = () => {
+    if (!trashShow) {
+      clickHandler();
+    }
+  };
   return (
-    <Wrapper onClick={clickHandler}>
+    <Wrapper onClick={clickFunc}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <AvatarWrapper image={user.image}></AvatarWrapper>
         <TextBody>

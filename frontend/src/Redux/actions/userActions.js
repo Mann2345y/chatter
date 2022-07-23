@@ -16,6 +16,7 @@ import {
 import { axiosInstance } from "../axios";
 import { GET_CHAT_MESSAGES_SUCCESS } from "../constants/messagesConstants";
 import { SET_CURRENT_CHAT } from "../constants/chatsConstants";
+import { getFriends, getFriendsChats, getGroupchats } from "./chatsActions";
 
 export const loginUser = (email, password) => async (dispatch) => {
   try {
@@ -30,6 +31,9 @@ export const loginUser = (email, password) => async (dispatch) => {
       type: USER_LOGIN_SUCCESS,
       payload: data,
     });
+    dispatch(getFriendsChats());
+    dispatch(getGroupchats());
+    dispatch(getFriends());
     localStorage.setItem("loggedUser", JSON.stringify(data));
   } catch (error) {
     dispatch({

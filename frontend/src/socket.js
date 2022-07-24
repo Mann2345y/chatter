@@ -1,4 +1,4 @@
 import io from "socket.io-client";
-const SOCKET_URL = "http://localhost:5000";
+const SOCKET_URL = "https://http://chatterwebsapp.herokuapp.com/";
 
 export const socket = io(SOCKET_URL);

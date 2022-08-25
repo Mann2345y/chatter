@@ -14,7 +14,13 @@ dotenv.config();
 connectDB();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { rejectUnauthorized: false });
+const io = new Server(server, {
+  cors: {
+    origin: "https://chatterwebsapp.herokuapp.com",
+    methods: ["GET", "POST"],
+  },
+  rejectUnauthorized: false,
+});
 
 app.use(cors());
 app.use(express.json());

@@ -14,11 +14,8 @@ dotenv.config();
 connectDB();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "https://chatterwebsapp.herokuapp.com/",
-  },
-});
+const io = new Server(server);
+io.set("origins", "*:*");
 
 app.use(cors());
 app.use(express.json());

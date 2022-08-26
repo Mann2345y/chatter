@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   background-size: cover;
 `;
 const InnerWrapper = styled.div`
-  background: rgba(20, 20, 20, 0.7);
+  background: rgba(20, 20, 20, 0.5);
   height: 100%;
   width: 100%;
   display: flex;

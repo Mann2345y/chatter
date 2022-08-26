@@ -31,10 +31,10 @@ export const loginUser = (email, password) => async (dispatch) => {
       type: USER_LOGIN_SUCCESS,
       payload: data,
     });
+    localStorage.setItem("loggedUser", JSON.stringify(data));
     dispatch(getFriendsChats());
     dispatch(getGroupchats());
     dispatch(getFriends());
-    localStorage.setItem("loggedUser", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,

@@ -21,7 +21,6 @@ const io = new Server(server, {
   },
   rejectUnauthorized: false,
 });
-
 app.use(cors());
 app.use(express.json());
 

@@ -50,7 +50,7 @@ export const getGroupchats = () => async (dispatch) => {
     });
   }
 };
-export const getFriendsChats = () => async (dispatch) => {
+export const getFriendsChats = (token) => async (dispatch) => {
   try {
     dispatch({
       type: GET_FRIENDS_CHATS_REQUEST,

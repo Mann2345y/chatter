@@ -15,26 +15,61 @@ import {
 } from "../constants/userConstants";
 import { axiosInstance } from "../axios";
 import { GET_CHAT_MESSAGES_SUCCESS } from "../constants/messagesConstants";
-import { SET_CURRENT_CHAT } from "../constants/chatsConstants";
+import {
+  GET_FRIENDS_CHATS_FAIL,
+  GET_FRIENDS_CHATS_REQUEST,
+  GET_FRIENDS_CHATS_SUCCESS,
+  GET_GROUP_CHATS_FAIL,
+  GET_GROUP_CHATS_REQUEST,
+  GET_GROUP_CHATS_SUCCESS,
+  GET_USER_FRIENDS_FAIL,
+  GET_USER_FRIENDS_REQUEST,
+  GET_USER_FRIENDS_SUCCESS,
+  SET_CURRENT_CHAT,
+} from "../constants/chatsConstants";
 import { getFriends, getFriendsChats, getGroupchats } from "./chatsActions";
+import axios from "axios";
 
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
     });
-    const { data } = await axiosInstance.post(`/api/user/login`, {
+    const { data: loginData } = await axiosInstance.post(`/api/user/login`, {
       email,
       password,
     });
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: data,
+      payload: loginData,
     });
-    localStorage.setItem("loggedUser", JSON.stringify(data));
-    dispatch(getFriendsChats());
-    dispatch(getGroupchats());
-    dispatch(getFriends());
+    localStorage.setItem("loggedUser", JSON.stringify(loginData));
+    try {
+      dispatch({ type: GET_USER_FRIENDS_REQUEST });
+      dispatch({ type: GET_FRIENDS_CHATS_REQUEST });
+      dispatch({ type: GET_GROUP_CHATS_REQUEST });
+      let config = {
+        baseURL: "https://chatterwebsapp.herokuapp.com",
+        headers: { Authorization: `Bearer ${loginData.token}` },
+      };
+      const req1 = axios.get("/api/user/getFriends", config);
+      const req2 = axios.get("/api/chats", config);
+      let [res1, res2] = await Promise.all([req1, req2]);
+      const friendsChats = res2.data.filter(
+        (item) => item.isGroupChat === false
+      );
+      const groupChats = res2.data.filter((item) => item.isGroupChat === true);
+      dispatch({ type: GET_USER_FRIENDS_SUCCESS, payload: res1.data });
+      dispatch({ type: GET_FRIENDS_CHATS_SUCCESS, payload: friendsChats });
+      dispatch({ type: GET_GROUP_CHATS_SUCCESS, payload: groupChats });
+      localStorage.setItem("groupchats", JSON.stringify(groupChats));
+      localStorage.setItem("friendsChats", JSON.stringify(friendsChats));
+      localStorage.setItem("friends", JSON.stringify(res1.data));
+    } catch (error) {
+      dispatch({ type: GET_USER_FRIENDS_FAIL, payload: error });
+      dispatch({ type: GET_FRIENDS_CHATS_FAIL, payload: error });
+      dispatch({ type: GET_GROUP_CHATS_FAIL, payload: error });
+    }
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,

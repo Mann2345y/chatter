@@ -43,7 +43,7 @@ export const loginUser = (email, password) => async (dispatch) => {
       type: USER_LOGIN_SUCCESS,
       payload: loginData,
     });
-    localStorage.setItem("loggedUser", JSON.stringify(data));
+    localStorage.setItem("loggedUser", JSON.stringify(loginData));
     dispatch(getFriendsChats());
     dispatch(getGroupchats());
     dispatch(getFriends());

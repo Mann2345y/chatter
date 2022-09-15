@@ -69,7 +69,7 @@ const OptionsWrapper = styled.div`
   z-index: 2;
 `;
 const MenuOptions = styled.div`
-  height: 100px;
+  height: 70px;
   width: 150px;
   background: #9b84ee;
   position: absolute;
@@ -124,7 +124,6 @@ const Header = ({ setOpenSlider }) => {
             >
               Log Out
             </h5>
-            <h5>Change Theme</h5>
           </MenuOptions>
         </OptionsWrapper>
       </Top>

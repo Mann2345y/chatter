@@ -43,12 +43,11 @@ export const loginUser = (email, password) => async (dispatch) => {
       type: USER_LOGIN_SUCCESS,
       payload: loginData,
     });
-<<<<<<< HEAD
     localStorage.setItem("loggedUser", JSON.stringify(data));
     dispatch(getFriendsChats());
     dispatch(getGroupchats());
     dispatch(getFriends());
-=======
+
     localStorage.setItem("loggedUser", JSON.stringify(loginData));
     try {
       dispatch({ type: GET_USER_FRIENDS_REQUEST });
@@ -76,7 +75,6 @@ export const loginUser = (email, password) => async (dispatch) => {
       dispatch({ type: GET_FRIENDS_CHATS_FAIL, payload: error });
       dispatch({ type: GET_GROUP_CHATS_FAIL, payload: error });
     }
->>>>>>> 60cd97c418a80c11640d001db9021d9486e25726
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
